@@ -1,25 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Internet Speed Test</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Internet Speed Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    background: radial-gradient(circle at top, #1b1f3b, #0a0d1a);
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.speedtest {
+    width: 360px;
+    text-align: center;
+}
+h1 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+.gauge {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: auto;
+    border-radius: 50%;
+    background: conic-gradient(#18e0ff 0deg, #18e0ff 120deg, #1b2a4e 120deg, #1b2a4e 360deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.gauge::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: #0a0d1a;
+    border-radius: 50%;
+}
+.needle {
+    position: absolute;
+    width: 4px;
+    height: 120px;
+    background: linear-gradient(#fff, transparent);
+    top: 20px;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: rotate(-120deg);
+    transition: transform 1.5s ease-in-out;
+    z-index: 5;
+}
+.speed {
+    position: absolute;
+    z-index: 10;
+    font-size: 38px;
+    font-weight: 600;
+}
+.unit {
+    display: block;
+    font-size: 14px;
+    opacity: 0.7;
+}
+button {
+    margin-top: 30px;
+    padding: 14px 32px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    background: #18e0ff;
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    background: #0fc1da;
+}
+.info {
+    margin-top: 25px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+</style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Internet Speed Check</h1>
-    <p>Check your download speed</p>
-
-    <button onclick="startTest()">Check Speed</button>
-
-    <div class="result">
-        <p id="speed">Speed: -- Mbps</p>
-        <p id="ping">Ping: -- ms</p>
-        <p id="network">Network: --</p>
+<div class="speedtest">
+    <h1>INTERNET SPEED TEST</h1>
+    <div class="gauge">
+        <div class="needle" id="needle"></div>
+        <div class="speed" id="speedValue">0<span class="unit">Mbps</span></div>
     </div>
+    <button onclick="startTest()">START TEST</button>
+    <div class="info" id="info">Real-time speed measurement</div>
 </div>
 
-<script src="script.js"></script>
+<script>
+function startTest() {
+    let speedEl = document.getElementById("speedValue");
+    let needle = document.getElementById("needle");
+    let info = document.getElementById("info");
+    info.innerText = "Testing download speed...";
+    speedEl.innerHTML = "0<span class='unit'>Mbps</span>";
+    let finalSpeed = Math.random() * 80 + 20;
+    let current = 0;
+    let angle = -120 + (finalSpeed / 100) * 240;
+    needle.style.transform = `rotate(${angle}deg)`;
+    let interval = setInterval(() => {
+        current += finalSpeed / 40;
+        if (current >= finalSpeed) {
+            current = finalSpeed;
+            clearInterval(interval);
+            info.innerText = "Speed test completed";
+        }
+        speedEl.innerHTML = current.toFixed(1) + "<span class='unit'>Mbps</span>";
+    }, 40);
+}
+</script>
 </body>
 </html>
