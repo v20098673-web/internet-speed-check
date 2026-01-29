@@ -1,32 +1,122 @@
-function startTest() {
-    document.getElementById("speed").innerText = "Speed: Testing...";
-    document.getElementById("ping").innerText = "Ping: Testing...";
-    document.getElementById("network").innerText = "Network: Detecting...";
+/* ===== SPEEDOMETER CONFIG ===== */
+const maxSpeed = 300;
+const minAngle = -120;
+const maxAngle = 120;
+const arcLengthTotal = 754;
 
-    let startPing = performance.now();
+function startTest() {
+
+    // ===== ELEMENTS =====
+    const speedText = document.getElementById("speedValue");
+    const pingText = document.getElementById("ping");
+    const networkText = document.getElementById("network");
+    const needle = document.getElementById("needle");
+    const arc = document.getElementById("activeArc");
+    const status = document.getElementById("status");
+
+    // ===== UI RESET =====
+    speedText.innerText = "0";
+    pingText.innerText = "Ping: Testing...";
+    networkText.innerText = "Network: Detecting...";
+    status.innerText = "Connecting to server…";
+
+    /* =====================================================
+       1️⃣ REAL PING TEST
+    ===================================================== */
+    let pingStart = performance.now();
     fetch("https://www.google.com/images/phd/px.gif", { mode: "no-cors" })
         .then(() => {
-            let ping = Math.round(performance.now() - startPing);
-            document.getElementById("ping").innerText = "Ping: " + ping + " ms";
+            let ping = Math.round(performance.now() - pingStart);
+            pingText.innerText = "Ping: " + ping + " ms";
+        })
+        .catch(() => {
+            pingText.innerText = "Ping: -- ms";
         });
 
-    let image = new Image();
-    let startTime = new Date().getTime();
-
-    image.onload = function () {
-        let endTime = new Date().getTime();
-        let duration = (endTime - startTime) / 1000;
-        let imageSize = 500000;
-        let speedMbps = ((imageSize * 8) / duration / 1024 / 1024).toFixed(2);
-        document.getElementById("speed").innerText = "Speed: " + speedMbps + " Mbps";
-    };
-
-    image.src = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg?" + Math.random();
-
+    /* =====================================================
+       2️⃣ NETWORK TYPE
+    ===================================================== */
     if (navigator.connection) {
-        document.getElementById("network").innerText =
+        networkText.innerText =
             "Network: " + navigator.connection.effectiveType.toUpperCase();
     } else {
-        document.getElementById("network").innerText = "Network: Unknown";
+        networkText.innerText = "Network: Unknown";
     }
+
+    /* =====================================================
+       3️⃣ REAL DOWNLOAD SPEED TEST
+    ===================================================== */
+    let image = new Image();
+    let imageSize = 500000; // bytes
+    let startTime = performance.now();
+
+    image.onload = function () {
+        let endTime = performance.now();
+        let duration = (endTime - startTime) / 1000;
+
+        let speedMbps =
+            (imageSize * 8) / duration / 1024 / 1024;
+
+        speedMbps = Math.min(speedMbps, maxSpeed); // cap to meter max
+
+        animateSpeed(speedMbps.toFixed(1));
+    };
+
+    image.onerror = function () {
+        status.innerText = "Speed test failed";
+    };
+
+    image.src =
+        "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg?"
+        + Math.random();
+}
+
+/* =====================================================
+   4️⃣ SMOOTH NEEDLE + ARC ANIMATION
+===================================================== */
+function animateSpeed(finalSpeed) {
+
+    const speedText = document.getElementById("speedValue");
+    const needle = document.getElementById("needle");
+    const arc = document.getElementById("activeArc");
+    const status = document.getElementById("status");
+
+    let start = performance.now();
+    let duration = 3500;
+
+    function animate(now) {
+        let progress = Math.min((now - start) / duration, 1);
+
+        // Smooth easing (real app feel)
+        let eased = 1 - Math.pow(2, -10 * progress);
+
+        let currentSpeed = eased * finalSpeed;
+        speedText.innerText = currentSpeed.toFixed(1);
+
+        // Needle angle
+        let angle =
+            minAngle +
+            (currentSpeed / maxSpeed) * (maxAngle - minAngle);
+
+        needle.setAttribute(
+            "transform",
+            `rotate(${angle} 180 220)`
+        );
+
+        // Arc fill
+        let arcLen =
+            (currentSpeed / maxSpeed) * arcLengthTotal;
+
+        arc.style.strokeDasharray =
+            `${arcLen} ${arcLengthTotal}`;
+
+        if (progress < 1) {
+            status.innerText = "Measuring download speed…";
+            requestAnimationFrame(animate);
+        } else {
+            status.innerText = "Test completed successfully";
+        }
+    }
+
+    requestAnimationFrame(animate);
 }
