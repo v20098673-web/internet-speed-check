@@ -1,154 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Internet Speed Test – Fast & Free</title>
-
-<meta name="description" content="Check your Internet speed with a modern speed test. Measure download speed, ping, and network quality instantly.">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.card {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    border-radius: 18px;
-    padding: 30px;
-    width: 340px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-
-h1 {
-    font-size: 22px;
-    margin-bottom: 20px;
-}
-
-.speed-circle {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    border: 10px solid rgba(255,255,255,0.15);
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 32px;
-    font-weight: bold;
-    position: relative;
-}
-
-.speed-circle span {
-    font-size: 14px;
-    display: block;
-}
-
-button {
-    margin-top: 20px;
-    padding: 14px 30px;
-    border-radius: 30px;
-    border: none;
-    font-size: 16px;
-    background: #1abc9c;
-    color: #000;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #16a085;
-}
-
-.info {
-    margin-top: 20px;
-    font-size: 14px;
-    opacity: 0.9;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Internet Speed Test</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="card">
-    <h1>Internet Speed Test</h1>
+<div class="container">
+    <h1>Internet Speed Check</h1>
+    <p>Check your download speed</p>
 
-    <div class="speed-circle" id="speedBox">
-        0
-        <span>Mbps</span>
-    </div>
+    <button onclick="startTest()">Check Speed</button>
 
-    <button onclick="startTest()">Start Test</button>
-
-    <div class="info">
-        <div id="ping">Ping: -- ms</div>
-        <div id="network">Network: --</div>
+    <div class="result">
+        <p id="speed">Speed: -- Mbps</p>
+        <p id="ping">Ping: -- ms</p>
+        <p id="network">Network: --</p>
     </div>
 </div>
 
-<script>
-function startTest() {
-    let speedBox = document.getElementById("speedBox");
-    let pingBox = document.getElementById("ping");
-    let networkBox = document.getElementById("network");
-
-    speedBox.innerHTML = "Testing<span>Mbps</span>";
-    pingBox.innerText = "Ping: Testing...";
-    networkBox.innerText = "Network: Detecting...";
-
-    // Ping
-    let pingStart = performance.now();
-    fetch("https://www.google.com/images/phd/px.gif", {mode: "no-cors"})
-        .then(() => {
-            let ping = Math.round(performance.now() - pingStart);
-            pingBox.innerText = "Ping: " + ping + " ms";
-        });
-
-    // Speed Test
-    let image = new Image();
-    let startTime = new Date().getTime();
-
-    image.onload = function () {
-        let endTime = new Date().getTime();
-        let duration = (endTime - startTime) / 1000;
-        let size = 500000; // bytes
-        let speed = ((size * 8) / duration / 1024 / 1024).toFixed(2);
-
-        animateSpeed(speed);
-    };
-
-    image.src = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg?" + Math.random();
-
-    if (navigator.connection) {
-        networkBox.innerText =
-            "Network: " + navigator.connection.effectiveType.toUpperCase();
-    } else {
-        networkBox.innerText = "Network: Unknown";
-    }
-}
-
-function animateSpeed(finalSpeed) {
-    let speedBox = document.getElementById("speedBox");
-    let current = 0;
-    let interval = setInterval(() => {
-        current += finalSpeed / 40;
-        if (current >= finalSpeed) {
-            current = finalSpeed;
-            clearInterval(interval);
-        }
-        speedBox.innerHTML = current.toFixed(1) + "<span>Mbps</span>";
-    }, 30);
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
