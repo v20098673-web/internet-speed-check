@@ -2,28 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Internet Speed Test | Professional Network Analyzer</title>
+<title>Internet Speed Test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Professional Internet Speed Test to check download speed, network performance, and connection quality in real time.">
-
 <style>
-:root {
-    --accent: #18e0ff;
-    --dark: #0a0d1a;
-    --card: rgba(255,255,255,0.08);
-}
-
 body {
     margin: 0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    color: #fff;
-    min-height: 100vh;
+    height: 100vh;
     background:
-        linear-gradient(rgba(8,10,25,0.9), rgba(8,10,25,0.9)),
-        url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80");
-    background-size: cover;
-    background-position: center;
+      radial-gradient(circle at top, #1c2238, #0a0d1a);
+    font-family: "Segoe UI", sans-serif;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,124 +20,54 @@ body {
 
 .app {
     width: 420px;
-    background: var(--card);
-    backdrop-filter: blur(14px);
-    border-radius: 22px;
-    padding: 28px 24px 32px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
     text-align: center;
 }
 
-header {
+h1 {
+    margin: 10px 0 5px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    opacity: 0.7;
+    font-size: 14px;
     margin-bottom: 10px;
 }
 
-header h1 {
-    font-size: 20px;
-    letter-spacing: 1px;
-    margin: 0;
-}
-
-header p {
-    font-size: 13px;
-    opacity: 0.7;
-    margin-top: 6px;
-}
-
-.gauge {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 18px auto 10px;
-    border-radius: 50%;
-    background: conic-gradient(
-        var(--accent) 0deg,
-        var(--accent) 170deg,
-        #1b2a4e 170deg,
-        #1b2a4e 360deg
-    );
-}
-
-.gauge::after {
-    content: "";
-    position: absolute;
-    inset: 34px;
-    background: var(--dark);
-    border-radius: 50%;
-}
-
-.needle {
-    position: absolute;
-    width: 4px;
-    height: 140px;
-    top: 10px;
-    left: 50%;
-    background: linear-gradient(#fff, transparent);
-    transform-origin: bottom center;
-    transform: rotate(-130deg);
-    transition: transform 0.6s ease;
-    z-index: 4;
-}
-
-.speed {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.speed-value {
-    font-size: 44px;
-    font-weight: 600;
-}
-
-.speed-unit {
-    font-size: 14px;
-    opacity: 0.7;
-}
-
-.scale span {
-    position: absolute;
-    font-size: 11px;
-    color: #9fdfff;
-    transform: translate(-50%, -50%);
-}
-
-.controls {
-    margin-top: 18px;
-}
-
+/* BUTTON */
 button {
-    padding: 14px 36px;
-    border-radius: 40px;
+    margin-top: 25px;
+    padding: 14px 42px;
+    border-radius: 30px;
     border: none;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     background: linear-gradient(135deg, #18e0ff, #0fc1da);
     color: #000;
     cursor: pointer;
     box-shadow: 0 10px 30px rgba(24,224,255,0.4);
-    transition: transform .2s, box-shadow .2s;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 40px rgba(24,224,255,0.6);
+    box-shadow: 0 15px 45px rgba(24,224,255,0.6);
 }
 
-.info {
-    margin-top: 14px;
-    font-size: 13px;
-    opacity: 0.85;
+/* SPEED TEXT */
+.speed {
+    font-size: 42px;
+    font-weight: 600;
+    margin-top: -220px;
 }
 
-footer {
-    margin-top: 18px;
-    font-size: 11px;
-    opacity: 0.6;
+.unit {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.status {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.8;
 }
 </style>
 </head>
@@ -156,71 +75,87 @@ footer {
 <body>
 
 <div class="app">
-    <header>
-        <h1>INTERNET SPEED TEST</h1>
-        <p>Professional Network Performance Analyzer</p>
-    </header>
+    <h1>INTERNET SPEED TEST</h1>
+    <div class="subtitle">Professional Network Performance Analyzer</div>
 
-    <div class="gauge">
-        <div class="needle" id="needle"></div>
+    <!-- SVG GAUGE -->
+    <svg width="360" height="360" viewBox="0 0 360 360">
+        <!-- Background arc -->
+        <path d="M60 220 A120 120 0 1 1 300 220"
+              fill="none"
+              stroke="#1b2a4e"
+              stroke-width="22"
+              stroke-linecap="round"/>
 
-        <div class="speed">
-            <div class="speed-value" id="speedValue">0</div>
-            <div class="speed-unit">Mbps</div>
-        </div>
+        <!-- Active arc -->
+        <path id="activeArc"
+              d="M60 220 A120 120 0 1 1 300 220"
+              fill="none"
+              stroke="#18e0ff"
+              stroke-width="22"
+              stroke-linecap="round"
+              stroke-dasharray="0 1000"/>
 
-        <div class="scale">
-            <span style="top:235px; left:50px;">1</span>
-            <span style="top:185px; left:25px;">5</span>
-            <span style="top:125px; left:45px;">10</span>
-            <span style="top:75px; left:95px;">20</span>
-            <span style="top:45px; left:150px;">50</span>
-            <span style="top:75px; left:205px;">100</span>
-            <span style="top:125px; left:255px;">150</span>
-            <span style="top:185px; left:280px;">200</span>
-            <span style="top:235px; left:255px;">250</span>
-            <span style="top:260px; left:190px;">300</span>
-        </div>
-    </div>
+        <!-- Tick marks + labels -->
+        <g fill="#9fdfff" font-size="12" text-anchor="middle">
+            <text x="60"  y="235">0</text>
+            <text x="90"  y="175">5</text>
+            <text x="135" y="130">10</text>
+            <text x="180" y="110">50</text>
+            <text x="225" y="130">100</text>
+            <text x="270" y="175">200</text>
+            <text x="300" y="235">300</text>
+        </g>
 
-    <div class="controls">
-        <button onclick="startTest()">START TEST</button>
-    </div>
+        <!-- Needle -->
+        <g id="needle" transform="rotate(-120 180 220)">
+            <line x1="180" y1="220" x2="180" y2="120"
+                  stroke="white" stroke-width="4"/>
+        </g>
+    </svg>
 
-    <div class="info" id="info">Ready to measure your connection speed</div>
+    <div class="speed" id="speedValue">0</div>
+    <div class="unit">Mbps</div>
 
-    <footer>
-        © 2026 Network Speed Analyzer
-    </footer>
+    <button onclick="startTest()">START TEST</button>
+    <div class="status" id="status">Ready</div>
 </div>
 
 <script>
-const speedSteps = [1,5,10,20,50,100,150,200,250,300];
-const minAngle = -130;
-const maxAngle = 130;
+const maxSpeed = 300;
+const minAngle = -120;
+const maxAngle = 120;
 
-function startTest(){
+function startTest() {
     const speedEl = document.getElementById("speedValue");
     const needle = document.getElementById("needle");
-    const info = document.getElementById("info");
+    const arc = document.getElementById("activeArc");
+    const status = document.getElementById("status");
 
-    info.innerText = "Analyzing network performance...";
-    let target = speedSteps[Math.floor(Math.random()*speedSteps.length)];
-    let i = 0;
+    status.innerText = "Testing download speed…";
 
-    const interval = setInterval(()=>{
-        if(i >= speedSteps.length || speedSteps[i] > target){
+    let speed = 0;
+    let target = Math.floor(Math.random() * 200) + 30;
+
+    let interval = setInterval(() => {
+        speed += Math.random() * 8;
+        if (speed >= target) {
+            speed = target;
             clearInterval(interval);
-            info.innerText = "Test completed successfully";
-            return;
+            status.innerText = "Test completed successfully";
         }
 
-        let value = speedSteps[i];
-        speedEl.innerText = value;
-        let angle = minAngle + (value/300)*(maxAngle-minAngle);
-        needle.style.transform = `rotate(${angle}deg)`;
-        i++;
-    }, 420);
+        speedEl.innerText = speed.toFixed(1);
+
+        let angle = minAngle + (speed / maxSpeed) * (maxAngle - minAngle);
+        needle.setAttribute(
+            "transform",
+            `rotate(${angle} 180 220)`
+        );
+
+        let arcLength = (speed / maxSpeed) * 1000;
+        arc.style.strokeDasharray = `${arcLength} 1000`;
+    }, 60);
 }
 </script>
 
