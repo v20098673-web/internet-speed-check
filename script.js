@@ -4,9 +4,9 @@ const minAngle = -120;
 const maxAngle = 120;
 const arcLengthTotal = 754;
 
+/* ===== START SPEED TEST ===== */
 function startTest() {
 
-    // ===== ELEMENTS =====
     const speedText = document.getElementById("speedValue");
     const pingText = document.getElementById("ping");
     const networkText = document.getElementById("network");
@@ -14,15 +14,12 @@ function startTest() {
     const arc = document.getElementById("activeArc");
     const status = document.getElementById("status");
 
-    // ===== UI RESET =====
     speedText.innerText = "0";
     pingText.innerText = "Ping: Testing...";
     networkText.innerText = "Network: Detecting...";
     status.innerText = "Connecting to server…";
 
-    /* =====================================================
-       1️⃣ REAL PING TEST
-    ===================================================== */
+    /* ===== REAL PING TEST ===== */
     let pingStart = performance.now();
     fetch("https://www.google.com/images/phd/px.gif", { mode: "no-cors" })
         .then(() => {
@@ -33,9 +30,7 @@ function startTest() {
             pingText.innerText = "Ping: -- ms";
         });
 
-    /* =====================================================
-       2️⃣ NETWORK TYPE
-    ===================================================== */
+    /* ===== NETWORK TYPE ===== */
     if (navigator.connection) {
         networkText.innerText =
             "Network: " + navigator.connection.effectiveType.toUpperCase();
@@ -43,9 +38,7 @@ function startTest() {
         networkText.innerText = "Network: Unknown";
     }
 
-    /* =====================================================
-       3️⃣ REAL DOWNLOAD SPEED TEST
-    ===================================================== */
+    /* ===== REAL DOWNLOAD SPEED TEST ===== */
     let image = new Image();
     let imageSize = 500000; // bytes
     let startTime = performance.now();
@@ -57,9 +50,8 @@ function startTest() {
         let speedMbps =
             (imageSize * 8) / duration / 1024 / 1024;
 
-        speedMbps = Math.min(speedMbps, maxSpeed); // cap to meter max
-
-        animateSpeed(speedMbps.toFixed(1));
+        speedMbps = Math.min(speedMbps, maxSpeed);
+        animateSpeed(speedMbps);
     };
 
     image.onerror = function () {
@@ -71,9 +63,7 @@ function startTest() {
         + Math.random();
 }
 
-/* =====================================================
-   4️⃣ SMOOTH NEEDLE + ARC ANIMATION
-===================================================== */
+/* ===== ANIMATE NEEDLE + ARC ===== */
 function animateSpeed(finalSpeed) {
 
     const speedText = document.getElementById("speedValue");
@@ -86,14 +76,11 @@ function animateSpeed(finalSpeed) {
 
     function animate(now) {
         let progress = Math.min((now - start) / duration, 1);
-
-        // Smooth easing (real app feel)
         let eased = 1 - Math.pow(2, -10 * progress);
 
         let currentSpeed = eased * finalSpeed;
         speedText.innerText = currentSpeed.toFixed(1);
 
-        // Needle angle
         let angle =
             minAngle +
             (currentSpeed / maxSpeed) * (maxAngle - minAngle);
@@ -103,7 +90,6 @@ function animateSpeed(finalSpeed) {
             `rotate(${angle} 180 220)`
         );
 
-        // Arc fill
         let arcLen =
             (currentSpeed / maxSpeed) * arcLengthTotal;
 
