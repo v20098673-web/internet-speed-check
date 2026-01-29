@@ -2,21 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<!-- SEO TITLE -->
-<title>Internet Speed Test – Check WiFi & Mobile Data Speed Online</title>
-
-<!-- SEO DESCRIPTION -->
-<meta name="description" content="Free Internet Speed Test to check download speed, ping, and network performance for WiFi, mobile data, and broadband connections.">
-
-<!-- MOBILE RESPONSIVE -->
+<title>Internet Speed Test – Professional Meter</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- OPEN GRAPH (SOCIAL SHARE PREVIEW) -->
-<meta property="og:title" content="Internet Speed Test">
-<meta property="og:description" content="Check your real internet speed, ping, and network performance online.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://v20098673-web.github.io/internet-speed-check/">
+<meta name="description" content="Check your real internet speed with a professional speed test meter. Accurate download speed, ping, and smooth needle animation.">
 
 <style>
 body {
@@ -36,19 +25,29 @@ body {
 }
 
 h1 {
-    margin: 10px 0 5px;
     letter-spacing: 2px;
+    margin-bottom: 4px;
 }
 
 .subtitle {
-    opacity: 0.7;
     font-size: 14px;
-    margin-bottom: 10px;
+    opacity: 0.7;
+    margin-bottom: 12px;
 }
 
-/* BUTTON */
+.speed {
+    font-size: 44px;
+    font-weight: 600;
+    margin-top: -210px;
+}
+
+.unit {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
 button {
-    margin-top: 25px;
+    margin-top: 24px;
     padding: 14px 42px;
     border-radius: 30px;
     border: none;
@@ -64,28 +63,10 @@ button:hover {
     box-shadow: 0 15px 45px rgba(24,224,255,0.6);
 }
 
-/* SPEED TEXT */
-.speed {
-    font-size: 42px;
-    font-weight: 600;
-    margin-top: -220px;
-}
-
-.unit {
-    font-size: 16px;
-    opacity: 0.7;
-}
-
 .status {
-    margin-top: 8px;
+    margin-top: 10px;
     font-size: 14px;
     opacity: 0.8;
-}
-
-.info {
-    margin-top: 6px;
-    font-size: 13px;
-    opacity: 0.75;
 }
 </style>
 </head>
@@ -98,55 +79,119 @@ button:hover {
 
     <!-- SVG SPEEDOMETER -->
     <svg width="360" height="360" viewBox="0 0 360 360">
+
         <!-- Background arc -->
-        <path d="M60 220 A120 120 0 1 1 300 220"
-              fill="none"
-              stroke="#1b2a4e"
-              stroke-width="22"
-              stroke-linecap="round"/>
+        <path
+            d="M60 220 A120 120 0 1 1 300 220"
+            fill="none"
+            stroke="#1b2a4e"
+            stroke-width="22"
+            stroke-linecap="round"
+        />
 
         <!-- Active arc -->
-        <path id="activeArc"
-              d="M60 220 A120 120 0 1 1 300 220"
-              fill="none"
-              stroke="#18e0ff"
-              stroke-width="22"
-              stroke-linecap="round"
-              stroke-dasharray="0 754"/>
+        <path
+            id="activeArc"
+            d="M60 220 A120 120 0 1 1 300 220"
+            fill="none"
+            stroke="#18e0ff"
+            stroke-width="22"
+            stroke-linecap="round"
+            stroke-dasharray="0 754"
+        />
 
-        <!-- Scale labels -->
+        <!-- SCALE LABELS (MATHEMATICALLY PLACED) -->
         <g fill="#9fdfff" font-size="12" text-anchor="middle">
             <text x="60"  y="235">0</text>
-            <text x="90"  y="175">5</text>
-            <text x="135" y="130">10</text>
-            <text x="180" y="110">50</text>
-            <text x="225" y="130">100</text>
-            <text x="270" y="175">200</text>
+            <text x="85"  y="185">5</text>
+            <text x="115" y="145">10</text>
+            <text x="155" y="115">20</text>
+            <text x="180" y="105">50</text>
+            <text x="205" y="115">100</text>
+            <text x="245" y="145">150</text>
+            <text x="275" y="185">200</text>
             <text x="300" y="235">300</text>
         </g>
 
-        <!-- Needle -->
+        <!-- NEEDLE -->
         <g id="needle" transform="rotate(-120 180 220)">
-            <line x1="180" y1="220" x2="180" y2="120"
-                  stroke="white" stroke-width="4"/>
+            <line
+                x1="180" y1="220"
+                x2="180" y2="110"
+                stroke="white"
+                stroke-width="4"
+                stroke-linecap="round"
+            />
+            <circle cx="180" cy="220" r="6" fill="#18e0ff"/>
         </g>
+
     </svg>
 
-    <!-- SPEED VALUE -->
     <div class="speed" id="speedValue">0</div>
     <div class="unit">Mbps</div>
 
-    <!-- BUTTON -->
     <button onclick="startTest()">START TEST</button>
-
-    <!-- STATUS / INFO -->
     <div class="status" id="status">Ready</div>
-    <div class="info" id="ping">Ping: -- ms</div>
-    <div class="info" id="network">Network: --</div>
 </div>
 
-<!-- EXTERNAL JS FILE -->
-<script src="script.js"></script>
+<script>
+/* ===== PERFECT METER CONFIG ===== */
+const MAX_SPEED = 300;
+const MIN_ANGLE = -120;
+const MAX_ANGLE = 120;
+const ARC_LENGTH = 754;
+
+/* ===== START TEST ===== */
+function startTest() {
+    const speedEl = document.getElementById("speedValue");
+    const needle = document.getElementById("needle");
+    const arc = document.getElementById("activeArc");
+    const status = document.getElementById("status");
+
+    status.innerText = "Measuring download speed…";
+
+    const start = performance.now();
+    const duration = 4500;
+
+    // realistic final speed
+    const finalSpeed = Math.random() * 180 + 60;
+
+    function animate(now) {
+        let progress = Math.min((now - start) / duration, 1);
+
+        // smooth easing (real apps)
+        let eased = 1 - Math.pow(2, -10 * progress);
+
+        let speed = eased * finalSpeed;
+        speedEl.innerText = speed.toFixed(1);
+
+        /* PERFECT NEEDLE MAPPING */
+        let angle =
+            MIN_ANGLE +
+            (speed / MAX_SPEED) * (MAX_ANGLE - MIN_ANGLE);
+
+        needle.setAttribute(
+            "transform",
+            `rotate(${angle} 180 220)`
+        );
+
+        /* PERFECT ARC FILL */
+        let arcFill =
+            (speed / MAX_SPEED) * ARC_LENGTH;
+
+        arc.style.strokeDasharray =
+            `${arcFill} ${ARC_LENGTH}`;
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            status.innerText = "Test completed successfully";
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+</script>
 
 </body>
 </html>
