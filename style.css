@@ -14,7 +14,7 @@ body {
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
     height: 100vh;
     background:
-        linear-gradient(rgba(8,10,25,0.9), rgba(8,10,25,0.9)),
+        linear-gradient(rgba(8,10,25,0.92), rgba(8,10,25,0.92)),
         url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80");
     background-size: cover;
     background-position: center;
@@ -25,13 +25,17 @@ body {
 }
 
 /* ===== MAIN CONTAINER ===== */
-.container {
+.container,
+.app {
     width: 420px;
     padding: 28px 26px 32px;
     border-radius: 22px;
     background: var(--card-bg);
     backdrop-filter: blur(14px);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
     text-align: center;
     animation: fadeIn 0.8s ease;
 }
@@ -67,6 +71,7 @@ h1 {
     font-size: 44px;
     font-weight: 600;
     margin-top: -210px;
+    text-shadow: 0 0 15px rgba(24,224,255,0.4);
 }
 
 .unit {
@@ -82,6 +87,13 @@ h1 {
     color: var(--text-muted);
 }
 
+/* ===== INFO TEXT ===== */
+.info {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
 /* ===== BUTTON ===== */
 button {
     margin-top: 26px;
@@ -93,34 +105,52 @@ button {
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     color: #000;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(24,224,255,0.4);
+    box-shadow:
+        0 10px 30px rgba(24,224,255,0.4),
+        inset 0 -2px 6px rgba(0,0,0,0.25);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 45px rgba(24,224,255,0.6);
+    box-shadow:
+        0 15px 45px rgba(24,224,255,0.6),
+        inset 0 -2px 6px rgba(0,0,0,0.25);
 }
 
 button:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
-/* ===== INFO TEXT (PING, NETWORK) ===== */
-.info {
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--text-muted);
+/* ===== SVG SPEEDOMETER ===== */
+svg {
+    display: block;
+    margin: 0 auto;
+}
+
+/* ===== NEEDLE (CRITICAL FIX) ===== */
+#needle {
+    transform-origin: 180px 220px;
+    transform-box: fill-box;
+    transition: transform 0.05s linear;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* ===== ACTIVE ARC GLOW ===== */
+#activeArc {
+    filter: drop-shadow(0 0 8px rgba(24,224,255,0.6));
 }
 
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 480px) {
-    .container {
+    .container,
+    .app {
         width: 92%;
         padding: 24px;
     }
 
     .speed {
         font-size: 38px;
+        margin-top: -200px;
     }
 }
