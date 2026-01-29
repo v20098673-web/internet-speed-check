@@ -14,6 +14,7 @@ function startTest() {
     const arc = document.getElementById("activeArc");
     const status = document.getElementById("status");
 
+    // Reset UI
     speedText.innerText = "0";
     pingText.innerText = "Ping: Testing...";
     networkText.innerText = "Network: Detecting...";
@@ -51,6 +52,7 @@ function startTest() {
             (imageSize * 8) / duration / 1024 / 1024;
 
         speedMbps = Math.min(speedMbps, maxSpeed);
+
         animateSpeed(speedMbps);
     };
 
@@ -63,7 +65,7 @@ function startTest() {
         + Math.random();
 }
 
-/* ===== ANIMATE NEEDLE + ARC ===== */
+/* ===== ANIMATE NEEDLE + ARC (FIXED) ===== */
 function animateSpeed(finalSpeed) {
 
     const speedText = document.getElementById("speedValue");
@@ -76,20 +78,21 @@ function animateSpeed(finalSpeed) {
 
     function animate(now) {
         let progress = Math.min((now - start) / duration, 1);
+
+        // Smooth easing (professional feel)
         let eased = 1 - Math.pow(2, -10 * progress);
 
         let currentSpeed = eased * finalSpeed;
         speedText.innerText = currentSpeed.toFixed(1);
 
+        /* ✅ CORRECT NEEDLE ROTATION (WORKING) */
         let angle =
             minAngle +
             (currentSpeed / maxSpeed) * (maxAngle - minAngle);
 
-        needle.setAttribute(
-            "transform",
-            `rotate(${angle} 180 220)`
-        );
+        needle.style.transform = `rotate(${angle}deg)`;
 
+        /* ✅ CORRECT ARC FILL */
         let arcLen =
             (currentSpeed / maxSpeed) * arcLengthTotal;
 
