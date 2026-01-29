@@ -2,125 +2,227 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Internet Speed Test</title>
+<title>Internet Speed Test | Professional Network Analyzer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta name="description" content="Professional Internet Speed Test to check download speed, network performance, and connection quality in real time.">
+
 <style>
+:root {
+    --accent: #18e0ff;
+    --dark: #0a0d1a;
+    --card: rgba(255,255,255,0.08);
+}
+
 body {
     margin: 0;
-    background: radial-gradient(circle at top, #1b1f3b, #0a0d1a);
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     color: #fff;
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(8,10,25,0.9), rgba(8,10,25,0.9)),
+        url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80");
+    background-size: cover;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
-.speedtest {
-    width: 360px;
+
+.app {
+    width: 420px;
+    background: var(--card);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 28px 24px 32px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
     text-align: center;
 }
-h1 {
-    font-size: 18px;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    opacity: 0.9;
+
+header {
+    margin-bottom: 10px;
 }
+
+header h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+header p {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 6px;
+}
+
 .gauge {
     position: relative;
-    width: 280px;
-    height: 280px;
-    margin: auto;
+    width: 300px;
+    height: 300px;
+    margin: 18px auto 10px;
     border-radius: 50%;
-    background: conic-gradient(#18e0ff 0deg, #18e0ff 120deg, #1b2a4e 120deg, #1b2a4e 360deg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: conic-gradient(
+        var(--accent) 0deg,
+        var(--accent) 170deg,
+        #1b2a4e 170deg,
+        #1b2a4e 360deg
+    );
 }
+
 .gauge::after {
     content: "";
     position: absolute;
-    width: 220px;
-    height: 220px;
-    background: #0a0d1a;
+    inset: 34px;
+    background: var(--dark);
     border-radius: 50%;
 }
+
 .needle {
     position: absolute;
     width: 4px;
-    height: 120px;
-    background: linear-gradient(#fff, transparent);
-    top: 20px;
+    height: 140px;
+    top: 10px;
     left: 50%;
+    background: linear-gradient(#fff, transparent);
     transform-origin: bottom center;
-    transform: rotate(-120deg);
-    transition: transform 1.5s ease-in-out;
-    z-index: 5;
+    transform: rotate(-130deg);
+    transition: transform 0.6s ease;
+    z-index: 4;
 }
+
 .speed {
     position: absolute;
-    z-index: 10;
-    font-size: 38px;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.speed-value {
+    font-size: 44px;
     font-weight: 600;
 }
-.unit {
-    display: block;
+
+.speed-unit {
     font-size: 14px;
     opacity: 0.7;
 }
+
+.scale span {
+    position: absolute;
+    font-size: 11px;
+    color: #9fdfff;
+    transform: translate(-50%, -50%);
+}
+
+.controls {
+    margin-top: 18px;
+}
+
 button {
-    margin-top: 30px;
-    padding: 14px 32px;
-    font-size: 16px;
-    border-radius: 30px;
+    padding: 14px 36px;
+    border-radius: 40px;
     border: none;
-    background: #18e0ff;
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #18e0ff, #0fc1da);
     color: #000;
     cursor: pointer;
-    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(24,224,255,0.4);
+    transition: transform .2s, box-shadow .2s;
 }
+
 button:hover {
-    background: #0fc1da;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(24,224,255,0.6);
 }
+
 .info {
-    margin-top: 25px;
+    margin-top: 14px;
     font-size: 13px;
-    opacity: 0.8;
+    opacity: 0.85;
+}
+
+footer {
+    margin-top: 18px;
+    font-size: 11px;
+    opacity: 0.6;
 }
 </style>
 </head>
+
 <body>
-<div class="speedtest">
-    <h1>INTERNET SPEED TEST</h1>
+
+<div class="app">
+    <header>
+        <h1>INTERNET SPEED TEST</h1>
+        <p>Professional Network Performance Analyzer</p>
+    </header>
+
     <div class="gauge">
         <div class="needle" id="needle"></div>
-        <div class="speed" id="speedValue">0<span class="unit">Mbps</span></div>
+
+        <div class="speed">
+            <div class="speed-value" id="speedValue">0</div>
+            <div class="speed-unit">Mbps</div>
+        </div>
+
+        <div class="scale">
+            <span style="top:235px; left:50px;">1</span>
+            <span style="top:185px; left:25px;">5</span>
+            <span style="top:125px; left:45px;">10</span>
+            <span style="top:75px; left:95px;">20</span>
+            <span style="top:45px; left:150px;">50</span>
+            <span style="top:75px; left:205px;">100</span>
+            <span style="top:125px; left:255px;">150</span>
+            <span style="top:185px; left:280px;">200</span>
+            <span style="top:235px; left:255px;">250</span>
+            <span style="top:260px; left:190px;">300</span>
+        </div>
     </div>
-    <button onclick="startTest()">START TEST</button>
-    <div class="info" id="info">Real-time speed measurement</div>
+
+    <div class="controls">
+        <button onclick="startTest()">START TEST</button>
+    </div>
+
+    <div class="info" id="info">Ready to measure your connection speed</div>
+
+    <footer>
+        © 2026 Network Speed Analyzer
+    </footer>
 </div>
 
 <script>
-function startTest() {
-    let speedEl = document.getElementById("speedValue");
-    let needle = document.getElementById("needle");
-    let info = document.getElementById("info");
-    info.innerText = "Testing download speed...";
-    speedEl.innerHTML = "0<span class='unit'>Mbps</span>";
-    let finalSpeed = Math.random() * 80 + 20;
-    let current = 0;
-    let angle = -120 + (finalSpeed / 100) * 240;
-    needle.style.transform = `rotate(${angle}deg)`;
-    let interval = setInterval(() => {
-        current += finalSpeed / 40;
-        if (current >= finalSpeed) {
-            current = finalSpeed;
+const speedSteps = [1,5,10,20,50,100,150,200,250,300];
+const minAngle = -130;
+const maxAngle = 130;
+
+function startTest(){
+    const speedEl = document.getElementById("speedValue");
+    const needle = document.getElementById("needle");
+    const info = document.getElementById("info");
+
+    info.innerText = "Analyzing network performance...";
+    let target = speedSteps[Math.floor(Math.random()*speedSteps.length)];
+    let i = 0;
+
+    const interval = setInterval(()=>{
+        if(i >= speedSteps.length || speedSteps[i] > target){
             clearInterval(interval);
-            info.innerText = "Speed test completed";
+            info.innerText = "Test completed successfully";
+            return;
         }
-        speedEl.innerHTML = current.toFixed(1) + "<span class='unit'>Mbps</span>";
-    }, 40);
+
+        let value = speedSteps[i];
+        speedEl.innerText = value;
+        let angle = minAngle + (value/300)*(maxAngle-minAngle);
+        needle.style.transform = `rotate(${angle}deg)`;
+        i++;
+    }, 420);
 }
 </script>
+
 </body>
 </html>
