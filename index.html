@@ -2,15 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Internet Speed Test</title>
+
+<!-- SEO TITLE -->
+<title>Internet Speed Test – Check WiFi & Mobile Data Speed Online</title>
+
+<!-- SEO DESCRIPTION -->
+<meta name="description" content="Free Internet Speed Test to check download speed, ping, and network performance for WiFi, mobile data, and broadband connections.">
+
+<!-- MOBILE RESPONSIVE -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- OPEN GRAPH (SOCIAL SHARE PREVIEW) -->
+<meta property="og:title" content="Internet Speed Test">
+<meta property="og:description" content="Check your real internet speed, ping, and network performance online.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://v20098673-web.github.io/internet-speed-check/">
 
 <style>
 body {
     margin: 0;
     height: 100vh;
-    background:
-      radial-gradient(circle at top, #1c2238, #0a0d1a);
+    background: radial-gradient(circle at top, #1c2238, #0a0d1a);
     font-family: "Segoe UI", sans-serif;
     color: #fff;
     display: flex;
@@ -69,6 +81,12 @@ button:hover {
     font-size: 14px;
     opacity: 0.8;
 }
+
+.info {
+    margin-top: 6px;
+    font-size: 13px;
+    opacity: 0.75;
+}
 </style>
 </head>
 
@@ -78,7 +96,7 @@ button:hover {
     <h1>INTERNET SPEED TEST</h1>
     <div class="subtitle">Professional Network Performance Analyzer</div>
 
-    <!-- SVG GAUGE -->
+    <!-- SVG SPEEDOMETER -->
     <svg width="360" height="360" viewBox="0 0 360 360">
         <!-- Background arc -->
         <path d="M60 220 A120 120 0 1 1 300 220"
@@ -94,9 +112,9 @@ button:hover {
               stroke="#18e0ff"
               stroke-width="22"
               stroke-linecap="round"
-              stroke-dasharray="0 1000"/>
+              stroke-dasharray="0 754"/>
 
-        <!-- Tick marks + labels -->
+        <!-- Scale labels -->
         <g fill="#9fdfff" font-size="12" text-anchor="middle">
             <text x="60"  y="235">0</text>
             <text x="90"  y="175">5</text>
@@ -114,62 +132,21 @@ button:hover {
         </g>
     </svg>
 
+    <!-- SPEED VALUE -->
     <div class="speed" id="speedValue">0</div>
     <div class="unit">Mbps</div>
 
+    <!-- BUTTON -->
     <button onclick="startTest()">START TEST</button>
+
+    <!-- STATUS / INFO -->
     <div class="status" id="status">Ready</div>
+    <div class="info" id="ping">Ping: -- ms</div>
+    <div class="info" id="network">Network: --</div>
 </div>
 
-<script>
-const maxSpeed = 300;
-const minAngle = -120;
-const maxAngle = 120;
-const arcLengthTotal = 754; // correct SVG arc length
-
-function startTest() {
-    const speedEl = document.getElementById("speedValue");
-    const needle = document.getElementById("needle");
-    const arc = document.getElementById("activeArc");
-    const status = document.getElementById("status");
-
-    status.innerText = "Testing download speed…";
-
-    let speed = 0;
-    let target = Math.random() * 200 + 50; // realistic target
-
-    let interval = setInterval(() => {
-        speed += Math.random() * 6;
-
-        if (speed >= target) {
-            speed = target;
-            clearInterval(interval);
-            status.innerText = "Test completed successfully";
-        }
-
-        // 1️⃣ Number display
-        speedEl.innerText = speed.toFixed(1);
-
-        // 2️⃣ PERFECT needle mapping
-        let angle =
-            minAngle +
-            (speed / maxSpeed) * (maxAngle - minAngle);
-
-        needle.setAttribute(
-            "transform",
-            `rotate(${angle} 180 220)`
-        );
-
-        // 3️⃣ PERFECT arc fill mapping
-        let arcLength =
-            (speed / maxSpeed) * arcLengthTotal;
-
-        arc.style.strokeDasharray =
-            `${arcLength} ${arcLengthTotal}`;
-
-    }, 60);
-}
-</script>
+<!-- EXTERNAL JS FILE -->
+<script src="script.js"></script>
 
 </body>
 </html>
