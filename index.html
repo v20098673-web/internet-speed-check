@@ -125,6 +125,7 @@ button:hover {
 const maxSpeed = 300;
 const minAngle = -120;
 const maxAngle = 120;
+const arcLengthTotal = 754; // correct SVG arc length
 
 function startTest() {
     const speedEl = document.getElementById("speedValue");
@@ -135,26 +136,37 @@ function startTest() {
     status.innerText = "Testing download speed…";
 
     let speed = 0;
-    let target = Math.floor(Math.random() * 200) + 30;
+    let target = Math.random() * 200 + 50; // realistic target
 
     let interval = setInterval(() => {
-        speed += Math.random() * 8;
+        speed += Math.random() * 6;
+
         if (speed >= target) {
             speed = target;
             clearInterval(interval);
             status.innerText = "Test completed successfully";
         }
 
+        // 1️⃣ Number display
         speedEl.innerText = speed.toFixed(1);
 
-        let angle = minAngle + (speed / maxSpeed) * (maxAngle - minAngle);
+        // 2️⃣ PERFECT needle mapping
+        let angle =
+            minAngle +
+            (speed / maxSpeed) * (maxAngle - minAngle);
+
         needle.setAttribute(
             "transform",
             `rotate(${angle} 180 220)`
         );
 
-        let arcLength = (speed / maxSpeed) * 1000;
-        arc.style.strokeDasharray = `${arcLength} 1000`;
+        // 3️⃣ PERFECT arc fill mapping
+        let arcLength =
+            (speed / maxSpeed) * arcLengthTotal;
+
+        arc.style.strokeDasharray =
+            `${arcLength} ${arcLengthTotal}`;
+
     }, 60);
 }
 </script>
